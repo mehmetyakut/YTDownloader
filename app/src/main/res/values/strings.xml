@@ -9,7 +9,7 @@
     <string name="download_complete">Download Completed!</string>
     <string name="developer">Developer: Mehmet Ozcan - mozcan@milets.com.tr</string>
     <string name="network_error">Network Error! Check your Connection!</string>
-    <string name="only_yt_links">Only YT Links</string>
+    <string name="only_yt_links">Only YouTube Links</string>
     <string name="download_failed">Download Failed!</string>
     <string name="howto">How To?</string>
     <string name="download_cancelled">Download Cancelled!</string>

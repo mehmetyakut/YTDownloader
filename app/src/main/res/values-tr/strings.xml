@@ -9,7 +9,7 @@
     <string name="download_complete">İndirme Tamamlandı!</string>
     <string name="developer">Geliştirici: Mehmet Özcan - mozcan@milets.com.tr</string>
     <string name="network_error">Ağ Hatası! Bağlantınızı Kontrol Edin!</string>
-    <string name="only_yt_links">Sadece YT Linkleri</string>
+    <string name="only_yt_links">Sadece YouTube Linkleri</string>
     <string name="download_failed">İndirme Başarısız!</string>
     <string name="howto">Nasıl Kullanırım?</string>
     <string name="download_cancelled">İndirme İotal Edildi!</string>

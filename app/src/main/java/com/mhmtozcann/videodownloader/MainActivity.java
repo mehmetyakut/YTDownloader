@@ -192,24 +192,28 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
            // Log.d(TAG, "Downloading Progress: " + String.valueOf(values[0]));
-            downloadButton.setProgress(values[0]);
+            try{
+                downloadButton.setProgress(values[0]);
+            }catch(Exception e){
+                Log.d(TAG,"Exception: "+e.toString());
+            }
+
             downloadButton.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     DownloadYT.this.cancel(true);
                     Toast.makeText(context, getResources().getString(R.string.download_cancelled), Toast.LENGTH_SHORT).show();
-                    f.delete();
+                    try{
+                        f.delete();
+                    }catch(Exception e){
+                        Log.d(TAG,"Exception: "+ e.toString());
+                    }
                     downloadButton.reset();
                     return true;
                 }
             });
             if(size != 0) textLayout.setError(getResources().getString(R.string.video_size) + " " + (size / 1024 / 1024) + " MB");
-            /*
-            dialog.setMessage(getResources().getString(R.string.downloading) + " (" + size / 1024 / 1024 + " MB )");
-            dialog.setIndeterminate(false);
-            dialog.setMax(100);
-            dialog.setProgress(values[0]);
-           */
+
         }
 
         @Override
@@ -220,7 +224,12 @@ public class MainActivity extends AppCompatActivity {
                textLayout.setError("");
            }else{
                Toast.makeText(context,getResources().getString(R.string.download_failed),Toast.LENGTH_LONG).show();
-               f.delete();
+              try{
+                  f.delete();
+              }catch(Exception e){
+                Log.d(TAG,"Exception: "+ e.toString());
+              }
+
            }
            // dialog.dismiss();
 
@@ -260,7 +269,16 @@ public class MainActivity extends AppCompatActivity {
                     String fileName = "video-"+c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE)+"-"+c.get((Calendar.HOUR_OF_DAY))+"-"+c.get(Calendar.MINUTE)+".mp4";
                     String storagePath = Environment.getExternalStorageDirectory().toString();
                     f = new File(storagePath,fileName);
-                    if(f.exists()) f.delete();
+                    int i = 1;
+                    while(f.exists()){
+                        fileName = "video-"+c.get(Calendar.YEAR)
+                                +"-"+(c.get(Calendar.MONTH)+1)
+                                +"-"+c.get(Calendar.DATE)+"-"+c.get((Calendar.HOUR_OF_DAY))
+                                +"-"+c.get(Calendar.MINUTE)+"("+i+").mp4";
+                        i++;
+                        f = new File(storagePath,fileName);
+                    }
+
                     FileOutputStream fos = new FileOutputStream(f);
                     byte[] buffer = new byte[1024];
                     long total = 0;
