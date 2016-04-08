@@ -1,0 +1,20 @@
+<resources>
+    <style name="AppTheme" parent="AppTheme.Base">
+
+    </style>
+    <!-- Base application theme. -->
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:colorPrimary">@color/primary</item>
+        <item name="android:colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:colorAccent">@color/accent</item>
+
+
+    </style>
+    <style name="MyActionBar" parent="Theme.AppCompat.Light">
+        <item name="android:textColor">@color/icons</item>
+        <item name="android:popupBackground">@color/accent</item>
+    </style>
+
+
+</resources>

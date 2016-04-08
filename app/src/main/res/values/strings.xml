@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Video Downloader</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">About</string>
+    <string name="Download">Download</string>
+    <string name="downloading">Downloading</string>
+    <string name="loading">Loading</string>
+    <string name="download_complete">Download Completed!</string>
+    <string name="developer">Developer: Mehmet Ozcan - mozcan@milets.com.tr</string>
+    <string name="network_error">Network Error! Check your Connection!</string>
+    <string name="only_yt_links">Only YT Links</string>
+    <string name="download_failed">Download Failed!</string>
+    <string name="howto">How To?</string>
+    <string name="download_cancelled">Download Cancelled!</string>
+    <string name="download_started">Download Started! LongClick to Cancel !</string>
+    <string name="video_size">Video Size:</string>
+    <string name="no_space">Not enough space left on Device Storage !</string>
+</resources>

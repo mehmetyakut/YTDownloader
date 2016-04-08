@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Video Downloader</string>
+
+    <string name="hello_world">Merhaba Dünya!</string>
+    <string name="action_settings">Hakkında</string>
+    <string name="Download">İndir</string>
+    <string name="downloading">İndiriliyor</string>
+    <string name="loading">Yükleniyor</string>
+    <string name="download_complete">İndirme Tamamlandı!</string>
+    <string name="developer">Geliştirici: Mehmet Özcan - mozcan@milets.com.tr</string>
+    <string name="network_error">Ağ Hatası! Bağlantınızı Kontrol Edin!</string>
+    <string name="only_yt_links">Sadece YT Linkleri</string>
+    <string name="download_failed">İndirme Başarısız!</string>
+    <string name="howto">Nasıl Kullanırım?</string>
+    <string name="download_cancelled">İndirme İotal Edildi!</string>
+    <string name="download_started">İndirme Başladı! İptal etmek için Uzun Basın !</string>
+    <string name="video_size">Video Boyutu: </string>
+    <string name="no_space">Cihaz Hafızasında yeteri kadar yer kalmadı</string>
+</resources>
