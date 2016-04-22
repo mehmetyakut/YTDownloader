@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
@@ -42,52 +43,26 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONObject;
+
+
 import com.fenjuly.library.ArrowDownloadButton;
 
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private static final String TAG = "MainActivity";
-
+    public String urlss = null;
     private ProgressDialog dialog;
     private EditText etURL;
     private TextInputLayout textLayout;
     private ArrowDownloadButton downloadButton;
 
-    private static final int REQUEST_WRITE = 111;
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case REQUEST_WRITE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    //reload my activity with permission granted or use the features what required the permission
-                    MainActivity.this.recreate();
-                } else
-                {
-                    Toast.makeText(getParent(), "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it this permission", Toast.LENGTH_LONG).show();
-                }
-                break;
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
-
-        boolean hasPermission =(ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-
-        if (!hasPermission) {
-            ActivityCompat.requestPermissions(getParent(),
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_WRITE);
-        }
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         downloadButton = (ArrowDownloadButton)findViewById(R.id.arrow_download_button);
@@ -110,9 +85,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 downloadButton.reset();
+               //.. Log.d(TAG,"URI: "+ Uri.parse(etURL.getText().toString()).getQueryParameter("v"));
+
                 if(etURL.getText().toString().contains("youtu.be")){
                     String url = etURL.getText().toString().split("be/")[1];
+
                     Log.d(TAG,"Submitted ID: "+ url);
+                    urlss = "https://www.youtube.com/watch?v="+url;
                     String parse = "http://46.101.143.104/services/youtube/get.php?vformat=video/mp4&vid="+url;
                     if(!new CheckConnection().getState(MainActivity.this)){
                         Toast.makeText(MainActivity.this,getResources().getString(R.string.network_error),Toast.LENGTH_LONG).show();
@@ -124,6 +103,8 @@ public class MainActivity extends AppCompatActivity {
                 }else if(etURL.getText().toString().contains("youtube.com")){
                     String url = etURL.getText().toString().split("v=")[1].split("&")[0];
                     Log.d(TAG,"Submitted ID: "+ url);
+                    urlss = etURL.getText().toString();
+
                     String parse = "http://46.101.143.104/services/youtube/get.php?vformat=video/mp4&vid="+url;
                     if(!new CheckConnection().getState(MainActivity.this)){
                         Toast.makeText(MainActivity.this,getResources().getString(R.string.network_error),Toast.LENGTH_LONG).show();
@@ -145,6 +126,9 @@ public class MainActivity extends AppCompatActivity {
             Bundle extras = receivedIntent.getExtras();
             etURL.setText(extras.getString(Intent.EXTRA_TEXT));
             String parse = "http://46.101.143.104/services/youtube/get.php?vformat=video/mp4&vid="+etURL.getText().toString().split("be/")[1];
+            String url = etURL.getText().toString().split("be/")[1];
+            Log.d(TAG,"Submitted ID: "+ url);
+            urlss = "https://www.youtube.com/watch?v="+url;
             if(!new CheckConnection().getState(MainActivity.this)){
                 Toast.makeText(MainActivity.this,getResources().getString(R.string.network_error),Toast.LENGTH_LONG).show();
             }else
@@ -154,25 +138,44 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Toast.makeText(MainActivity.this,getResources().getString(R.string.developer),Toast.LENGTH_LONG).show();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static String getTitleQuietly(String youtubeUrl) {
+        try {
+            if (youtubeUrl != null) {
+                URL embededURL = new URL("http://www.youtube.com/oembed?url=" +
+                        youtubeUrl + "&format=json"
+                );
+                BufferedReader reader = new BufferedReader(new InputStreamReader(embededURL.openStream()));
+                String content="";
+                String line;
+                while ((line = reader.readLine())!= null){
+                    content += line;
+                }
+                reader.close();
+
+                return new JSONObject(content.toString()).getString("title");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private class DownloadYT extends AsyncTask<String,Integer,String>{
@@ -191,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-           // Log.d(TAG, "Downloading Progress: " + String.valueOf(values[0]));
             try{
                 downloadButton.setProgress(values[0]);
             }catch(Exception e){
@@ -231,7 +233,6 @@ public class MainActivity extends AppCompatActivity {
               }
 
            }
-           // dialog.dismiss();
 
             if(noSpace){
                 Toast.makeText(context,getResources().getString(R.string.no_space),Toast.LENGTH_LONG).show();
@@ -246,8 +247,7 @@ public class MainActivity extends AppCompatActivity {
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     getClass().getName());
             mWakeLock.acquire();
-          //  dialog.setMessage(getResources().getString(R.string.downloading) + size / 1024 / 1024 + " MB ");
-          //  dialog.show();
+
             downloadButton.startAnimating();
             Toast.makeText(context,getResources().getString(R.string.download_started),Toast.LENGTH_SHORT).show();
         }
@@ -264,17 +264,13 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d(TAG,"Video Size: "+ size/1024/1024 +" MB");
                 if(huc != null) {
-                    Calendar c = Calendar.getInstance();
 
-                    String fileName = "video-"+c.get(Calendar.YEAR)+"-"+(c.get(Calendar.MONTH)+1)+"-"+c.get(Calendar.DATE)+"-"+c.get((Calendar.HOUR_OF_DAY))+"-"+c.get(Calendar.MINUTE)+".mp4";
+                    String fileName;
                     String storagePath = Environment.getExternalStorageDirectory().toString();
-                    f = new File(storagePath,fileName);
+                    f = new File(storagePath,getTitleQuietly(urlss.toString())+".mp4");
                     int i = 1;
                     while(f.exists()){
-                        fileName = "video-"+c.get(Calendar.YEAR)
-                                +"-"+(c.get(Calendar.MONTH)+1)
-                                +"-"+c.get(Calendar.DATE)+"-"+c.get((Calendar.HOUR_OF_DAY))
-                                +"-"+c.get(Calendar.MINUTE)+"("+i+").mp4";
+                        fileName = getTitleQuietly(urlss.toString())+"("+i+").mp4";
                         i++;
                         f = new File(storagePath,fileName);
                     }
@@ -322,10 +318,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
     private class DownloadWebPageTask extends AsyncTask<String, Void, String> {
         ProgressDialog pDialog;
         Context context;
@@ -336,10 +328,10 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... urls) {
             String response = "";
-
             for (String url : urls) {
                 HttpClient client = new DefaultHttpClient();
                 HttpGet httpGet = new HttpGet(url);
+                Log.d(TAG,"Video Title: "+ getTitleQuietly(urlss.toString()));
 
                 try {
                     HttpResponse execute = client.execute(httpGet);
@@ -379,5 +371,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    
 }
