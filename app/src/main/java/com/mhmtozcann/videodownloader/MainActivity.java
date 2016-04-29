@@ -1,19 +1,13 @@
 package com.mhmtozcann.videodownloader;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -21,10 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-
 import android.widget.Toast;
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,16 +27,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.security.Permission;
-import java.util.Calendar;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
-
-
 import com.fenjuly.library.ArrowDownloadButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -63,6 +49,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Permissions permissions = new Permissions();
+        permissions.getPermissionAccessNetworkState();
+        permissions.getPermissionToInternet();
+        permissions.getPermissionWakeLock();
+        permissions.getPermissionWriteExternalStorage();
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         downloadButton = (ArrowDownloadButton)findViewById(R.id.arrow_download_button);
