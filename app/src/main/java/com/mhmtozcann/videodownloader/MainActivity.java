@@ -1,13 +1,16 @@
 package com.mhmtozcann.videodownloader;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -43,18 +46,18 @@ public class MainActivity extends AppCompatActivity {
     private EditText etURL;
     private TextInputLayout textLayout;
     private ArrowDownloadButton downloadButton;
-
+    final static int PERMISSIONS_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Permissions permissions = new Permissions();
-        permissions.getPermissionAccessNetworkState();
-        permissions.getPermissionToInternet();
-        permissions.getPermissionWakeLock();
-        permissions.getPermissionWriteExternalStorage();
+       // Permissions permissions = new Permissions();
+       getPermissionAccessNetworkState();
+       getPermissionToInternet();
+       getPermissionWakeLock();
+       getPermissionWriteExternalStorage();
 
         toolbar = (Toolbar)findViewById(R.id.toolbar);
         downloadButton = (ArrowDownloadButton)findViewById(R.id.arrow_download_button);
@@ -126,6 +129,58 @@ public class MainActivity extends AppCompatActivity {
             }else
             new DownloadWebPageTask(MainActivity.this).execute(parse.toString());
            }
+    }
+
+
+
+
+
+    public void getPermissionAccessNetworkState() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.ACCESS_NETWORK_STATE)) {
+            }
+            requestPermissions(new String[]{Manifest.permission.ACCESS_NETWORK_STATE},
+                    PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    public void getPermissionWriteExternalStorage() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            }
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    public void getPermissionToInternet() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.INTERNET)) {
+            }
+            requestPermissions(new String[]{Manifest.permission.INTERNET},
+                    PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+    public void getPermissionWakeLock() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WAKE_LOCK)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.WAKE_LOCK)) {
+            }
+            requestPermissions(new String[]{Manifest.permission.WAKE_LOCK},
+                    PERMISSIONS_REQUEST_CODE);
+        }
     }
 
     @Override
