@@ -1,0 +1,43 @@
+{
+  "project_info": {
+    "project_number": "655546915377",
+    "project_id": "api-project-655546915377"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655546915377:android:55f50586da978bdc",
+        "android_client_info": {
+          "package_name": "com.mhmtozcann.videodownloader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655546915377-rebf0ktl3q5jg1vg0rkd90fdd2gb802l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwCxC8c8AoVP5SgZoi5yE1G4cGdbuam9g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-73077761-2"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

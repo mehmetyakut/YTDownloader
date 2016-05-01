@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
+
+    <string name="ga_trackingId">UA-73077761-2</string><!--Google analyticsden aldığımız id -->
+
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <bool name="ga_reportUncaughtExceptions">true</bool>
+
+    <integer name="ga_sessionTimeout">-1</integer>
+
+    <screenName name="com.mhmtozcann.videodownloader.MainActivity">Main Activity</screenName>
+</resources>

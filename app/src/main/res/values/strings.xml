@@ -16,4 +16,9 @@
     <string name="download_started">Download Started! LongClick to Cancel !</string>
     <string name="video_size">Video Size:</string>
     <string name="no_space">Not enough space left on Device Storage !</string>
+    <string name="downloads">Downloads</string>
+    <string name="no_video_error">There is no video you have downloaded!</string>
+    <string name="video_dir">Downloaded Videos on:</string>
+    <string name="open_yt">Open YouTube</string>
+    <string name="no_yt_error">YouTube App doesn\'t installed on your phone!</string>
 </resources>

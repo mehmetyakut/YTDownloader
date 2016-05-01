@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Video Downloader</string>
+    <string name="app_name">Video İndirici</string>
 
     <string name="hello_world">Merhaba Dünya!</string>
     <string name="action_settings">Hakkında</string>
@@ -16,4 +16,9 @@
     <string name="download_started">İndirme Başladı! İptal etmek için Uzun Basın !</string>
     <string name="video_size">Video Boyutu: </string>
     <string name="no_space">Cihaz Hafızasında yeteri kadar yer kalmadı</string>
+    <string name="downloads">İndirilenler</string>
+    <string name="no_video_error">Burada indirdiğiniz hiçbir video yok!</string>
+    <string name="video_dir">İnidirlen Videolar:</string>
+    <string name="open_yt">YouTube\'u Aç</string>
+    <string name="no_yt_error">Telefonunuzda YouTube uygulaması yüklü değil!</string>
 </resources>

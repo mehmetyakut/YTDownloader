@@ -2,9 +2,11 @@ package com.mhmtozcann.videodownloader;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -30,12 +32,16 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.List;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 import com.fenjuly.library.ArrowDownloadButton;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,13 +53,19 @@ public class MainActivity extends AppCompatActivity {
     private TextInputLayout textLayout;
     private ArrowDownloadButton downloadButton;
     final static int PERMISSIONS_REQUEST_CODE = 1;
-
+    private Tracker mTracker;
+    private Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        context = getApplicationContext();
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        mTracker.setScreenName("MainActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        Log.d(TAG, "onCreate: sended Tracker Info "+mTracker.toString());
 
-       // Permissions permissions = new Permissions();
        getPermissionAccessNetworkState();
        getPermissionToInternet();
        getPermissionWakeLock();
@@ -63,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         downloadButton = (ArrowDownloadButton)findViewById(R.id.arrow_download_button);
 
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Video Downloader");
+        toolbar.setTitle(getResources().getString(R.string.app_name));
 
         dialog = new ProgressDialog(MainActivity.this);
         dialog.setIndeterminate(true);
@@ -92,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,getResources().getString(R.string.network_error),Toast.LENGTH_LONG).show();
                     }else{
                         new DownloadWebPageTask(MainActivity.this).execute(parse.toString());
-                        downloadButton.startAnimating();
+                     //   downloadButton.startAnimating();
                     }
 
                 }else if(etURL.getText().toString().contains("youtube.com")){
@@ -105,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this,getResources().getString(R.string.network_error),Toast.LENGTH_LONG).show();
                     }else{
                         new DownloadWebPageTask(MainActivity.this).execute(parse.toString());
-                        downloadButton.startAnimating();
+                    //    downloadButton.startAnimating();
                     }
                 }else etURL.setError(getResources().getString(R.string.only_yt_links));
             }
@@ -130,9 +142,6 @@ public class MainActivity extends AppCompatActivity {
             new DownloadWebPageTask(MainActivity.this).execute(parse.toString());
            }
     }
-
-
-
 
 
     public void getPermissionAccessNetworkState() {
@@ -197,6 +206,9 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             Toast.makeText(MainActivity.this,getResources().getString(R.string.developer),Toast.LENGTH_LONG).show();
             return true;
+        }else if( id == R.id.action_downloads){
+            startActivity(new Intent(MainActivity.this,DownloadsActivity.class));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -215,8 +227,11 @@ public class MainActivity extends AppCompatActivity {
                     content += line;
                 }
                 reader.close();
+                JSONObject data = new JSONObject(content.toString());
+                String title = data.getString("title");
+                title.replaceAll("[^a-zA-Z0-9.-]", " ");
 
-                return new JSONObject(content.toString()).getString("title");
+                return title;
             }
 
         } catch (Exception e) {
@@ -237,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
             this.context = context;
 
         }
+
 
         @Override
         protected void onProgressUpdate(Integer... values) {
@@ -261,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             });
+
             if(size != 0) textLayout.setError(getResources().getString(R.string.video_size) + " " + (size / 1024 / 1024) + " MB");
 
         }
@@ -314,13 +331,19 @@ public class MainActivity extends AppCompatActivity {
 
                     String fileName;
                     String storagePath = Environment.getExternalStorageDirectory().toString();
-                    f = new File(storagePath,getTitleQuietly(urlss.toString())+".mp4");
+                    File dirs = new File(storagePath+"/"+getString(R.string.app_name).toString());
+                    if(!dirs.exists()){
+                        dirs.mkdirs();
+                    }
+                    f = new File(storagePath+"/"+getString(R.string.app_name).toString(),getTitleQuietly(urlss.toString())+".mp4");
                     int i = 1;
                     while(f.exists()){
                         fileName = getTitleQuietly(urlss.toString())+"("+i+").mp4";
                         i++;
                         f = new File(storagePath,fileName);
                     }
+                    mTracker.setScreenName(f.getName().toString());
+                    mTracker.send(new HitBuilders.ScreenViewBuilder().build());
 
                     FileOutputStream fos = new FileOutputStream(f);
                     byte[] buffer = new byte[1024];
@@ -411,6 +434,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             Log.d(TAG,"Result: "+ result);
             new DownloadYT(context).execute(result);
+            downloadButton.startAnimating();
         }catch (Exception e){
             Log.d(TAG,"Error Result: "+ e.toString());
         }
