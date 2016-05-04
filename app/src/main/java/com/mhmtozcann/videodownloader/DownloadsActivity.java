@@ -45,11 +45,13 @@ public class DownloadsActivity extends AppCompatActivity {
             String[] items = listVideos();
             if(items.length >0) {
                 no_video.setVisibility(View.GONE);
+                video_dir.setVisibility(View.VISIBLE);
                 video_dir.setText(getResources().getString(R.string.video_dir)+Environment.getExternalStorageDirectory()+"/"+getResources().getString(R.string.app_name));
                 ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item, R.id.video_title, items);
                 listView.setAdapter(arrayAdapter);
             }else{
                 no_video.setVisibility(View.VISIBLE);
+                video_dir.setVisibility(View.GONE);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -62,7 +64,7 @@ public class DownloadsActivity extends AppCompatActivity {
                 vieww.setAction(Intent.ACTION_VIEW);
                 TextView text = (TextView)view.findViewById(R.id.video_title);
                 String fname =  text.getText().toString();
-                vieww.setDataAndType(Uri.parse(Environment.getExternalStorageDirectory()+"/"+ getResources().getString(R.string.app_name)+"/"+fname),"video/*");
+                vieww.setDataAndType(Uri.parse(Environment.getExternalStorageDirectory()+"/"+ getResources().getString(R.string.app_name)+"/"+fname),"video/mp4");
                 Log.d(TAG, "onItemClick: "+vieww.getDataString());
                 startActivity(vieww);
             }
@@ -98,7 +100,7 @@ public class DownloadsActivity extends AppCompatActivity {
             for (int i = 0; i < fileList.length; i++) {
                 Log.e("Video:" + i + " File name", fileList[i]);
                 if (fileList[i].endsWith(".mp4")) {
-                    lists.add(fileList[i].toString().replaceAll("[^a-zA-Z0-9.-]", " ").toString());
+                    lists.add(fileList[i].toString());
                 }
             }
         }

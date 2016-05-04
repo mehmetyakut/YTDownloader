@@ -342,8 +342,7 @@ public class MainActivity extends AppCompatActivity {
                         i++;
                         f = new File(storagePath,fileName);
                     }
-                    mTracker.setScreenName(f.getName().toString());
-                    mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+
 
                     FileOutputStream fos = new FileOutputStream(f);
                     byte[] buffer = new byte[1024];
