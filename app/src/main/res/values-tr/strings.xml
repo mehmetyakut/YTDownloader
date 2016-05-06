@@ -5,7 +5,7 @@
     <string name="action_settings">Hakkında</string>
     <string name="Download">İndir</string>
     <string name="downloading">İndiriliyor</string>
-    <string name="loading">Yükleniyor</string>
+    <string name="loading">Video adresi çözümleniyor</string>
     <string name="download_complete">İndirme Tamamlandı!</string>
     <string name="developer">Geliştirici: Mehmet Özcan - mozcan@milets.com.tr</string>
     <string name="network_error">Ağ Hatası! Bağlantınızı Kontrol Edin!</string>
@@ -15,10 +15,17 @@
     <string name="download_cancelled">İndirme İotal Edildi!</string>
     <string name="download_started">İndirme Başladı! İptal etmek için Uzun Basın !</string>
     <string name="video_size">Video Boyutu: </string>
-    <string name="no_space">Cihaz Hafızasında yeteri kadar yer kalmadı</string>
+    <string name="no_space">Cihaz Hafızasında yeteri kadar yer kalmadı!</string>
     <string name="downloads">İndirilenler</string>
     <string name="no_video_error">Burada indirdiğiniz hiçbir video yok!</string>
-    <string name="video_dir">İnidirlen Videolar:</string>
+    <string name="video_dir">İndirilen Videolar:</string>
     <string name="open_yt">YouTube\'u Aç</string>
     <string name="no_yt_error">Telefonunuzda YouTube uygulaması yüklü değil!</string>
+    <string name="notice">Bazen YouTube doğru video adresi veremiyor. Bu nedenle bazı videolar bazen indirilemiyor.</string>
+    <string name="options_video">Video için Seçenekler</string>
+    <string name="are_you_sure">Emin misiniz?</string>
+    <string name="will_deleted">Bu video silinecek! Onaylıyor musunuz?</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="delete">Sil</string>
 </resources>

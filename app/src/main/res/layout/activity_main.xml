@@ -51,5 +51,16 @@
         android:src="@drawable/ic"
         android:layout_marginTop="80dp"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/notice"
+        android:textColor="@color/icons"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/linearLayout"
+        android:layout_alignStart="@+id/linearLayout" />
+
 
 </RelativeLayout>

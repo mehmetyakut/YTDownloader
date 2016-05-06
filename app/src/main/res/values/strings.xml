@@ -5,7 +5,7 @@
     <string name="action_settings">About</string>
     <string name="Download">Download</string>
     <string name="downloading">Downloading</string>
-    <string name="loading">Loading</string>
+    <string name="loading">Retriving video URL</string>
     <string name="download_complete">Download Completed!</string>
     <string name="developer">Developer: Mehmet Ozcan - mozcan@milets.com.tr</string>
     <string name="network_error">Network Error! Check your Connection!</string>
@@ -21,4 +21,11 @@
     <string name="video_dir">Downloaded Videos on:</string>
     <string name="open_yt">Open YouTube</string>
     <string name="no_yt_error">YouTube App doesn\'t installed on your phone!</string>
+    <string name="notice">Sometimes YouTube doesn\'t give the right video url. So some videos can\'t be download sometimes.</string>
+    <string name="options_video">Options for Video</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="will_deleted">This video will be deleted! Do you confirm?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="delete">Delete</string>
 </resources>

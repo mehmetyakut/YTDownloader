@@ -1,11 +1,14 @@
 package com.mhmtozcann.videodownloader;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.NavUtils;
+import android.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,6 +19,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -25,19 +31,30 @@ import java.util.ArrayList;
  */
 public class DownloadsActivity extends AppCompatActivity {
     private static final String TAG = "DownloadsActivity";
-    ListView listView;
-    Toolbar toolbar;
-    TextView no_video,video_dir;
+    public Context context;
+    private Tracker mTracker;
+    private ListView listView;
+    private Toolbar toolbar;
+    private TextView no_video,video_dir;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloads);
+        context = DownloadsActivity.this;
         listView =(ListView) findViewById(R.id.list);
         toolbar = (Toolbar) findViewById(R.id.toolbar1);
         no_video = (TextView)findViewById(R.id.errmsg);
         video_dir = (TextView)findViewById(R.id.video_dir);
+        listView.setLongClickable(true);
 
         setSupportActionBar(toolbar);
+
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        mTracker.setScreenName("DownloadsActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+        Log.d(TAG, "onCreate: sended Tracker Info ");
+
         getSupportActionBar().setTitle( getResources().getString(R.string.downloads));
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -57,7 +74,7 @@ public class DownloadsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+       listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent vieww = new Intent();
@@ -67,6 +84,50 @@ public class DownloadsActivity extends AppCompatActivity {
                 vieww.setDataAndType(Uri.parse(Environment.getExternalStorageDirectory()+"/"+ getResources().getString(R.string.app_name)+"/"+fname),"video/mp4");
                 Log.d(TAG, "onItemClick: "+vieww.getDataString());
                 startActivity(vieww);
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, "onItemLongClick: #"+position);
+                TextView name = (TextView)view.findViewById(R.id.video_title);
+                String filename = Environment.getExternalStorageDirectory()+"/"+getString(R.string.app_name)+"/"+name.getText().toString();
+                final File file = new File(filename);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                final AlertDialog.Builder deletebuilder = new AlertDialog.Builder(context);
+
+                builder.setTitle(getString(R.string.options_video));
+                String[] items = {getString(R.string.delete)};
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    AlertDialog dialog1;
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deletebuilder.setTitle(getString(R.string.are_you_sure));
+                        deletebuilder.setMessage(getString(R.string.will_deleted));
+                        deletebuilder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.d(TAG, "DeleteBuilder onClick: YES");
+                                file.delete();
+                                recreate();
+                            }
+                        });
+                        deletebuilder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Log.d(TAG, "DeleteBuilder onClick: NO");
+                                dialog1.dismiss();
+                            }
+                        });
+                        dialog1 = deletebuilder.create();
+                        dialog1.show();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                return true;
             }
         });
 

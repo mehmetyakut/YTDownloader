@@ -1,17 +1,21 @@
 package com.mhmtozcann.videodownloader;
 
 import android.Manifest;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.PowerManager;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -214,6 +218,22 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void sendNotification(String message,String title) {
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.ic)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
     public static String getTitleQuietly(String youtubeUrl) {
         try {
             if (youtubeUrl != null) {
@@ -288,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
                Toast.makeText(context,getResources().getString(R.string.download_complete),Toast.LENGTH_LONG).show();
                etURL.setText("");
                textLayout.setError("");
+               sendNotification("Download Complete!","VideoDownloader");
            }else{
                Toast.makeText(context,getResources().getString(R.string.download_failed),Toast.LENGTH_LONG).show();
               try{

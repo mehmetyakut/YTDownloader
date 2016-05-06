@@ -9,6 +9,5 @@
         android:title="Downloads"
         android:orderInCategory="100"
         app:showAsAction="always"
-        android:icon="@drawable/history"/>
-
+        android:icon="@drawable/ic_history"/>
 </menu>
