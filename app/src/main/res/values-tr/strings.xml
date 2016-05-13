@@ -12,7 +12,7 @@
     <string name="only_yt_links">Sadece YouTube Linkleri</string>
     <string name="download_failed">İndirme Başarısız!</string>
     <string name="howto">Nasıl Kullanırım?</string>
-    <string name="download_cancelled">İndirme İotal Edildi!</string>
+    <string name="download_cancelled">İndirme İptal Edildi!</string>
     <string name="download_started">İndirme Başladı! İptal etmek için Uzun Basın !</string>
     <string name="video_size">Video Boyutu: </string>
     <string name="no_space">Cihaz Hafızasında yeteri kadar yer kalmadı!</string>

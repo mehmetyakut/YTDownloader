@@ -44,6 +44,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 import com.fenjuly.library.ArrowDownloadButton;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
@@ -70,16 +72,24 @@ public class MainActivity extends AppCompatActivity {
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         Log.d(TAG, "onCreate: sended Tracker Info "+mTracker.toString());
 
+
+
        getPermissionAccessNetworkState();
        getPermissionToInternet();
        getPermissionWakeLock();
        getPermissionWriteExternalStorage();
 
-        toolbar = (Toolbar)findViewById(R.id.toolbar);
+
         downloadButton = (ArrowDownloadButton)findViewById(R.id.arrow_download_button);
 
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getResources().getString(R.string.app_name));
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("DCE0AE10FB4584072F669804913626A3")
+                .build();
+        mAdView.loadAd(adRequest);
 
         dialog = new ProgressDialog(MainActivity.this);
         dialog.setIndeterminate(true);
@@ -147,6 +157,18 @@ public class MainActivity extends AppCompatActivity {
            }
     }
 
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getPackageManager();
+        boolean app_installed;
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            app_installed = true;
+        }
+        catch (PackageManager.NameNotFoundException e) {
+            app_installed = false;
+        }
+        return app_installed;
+    }
 
     public void getPermissionAccessNetworkState() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_NETWORK_STATE)
@@ -213,6 +235,21 @@ public class MainActivity extends AppCompatActivity {
         }else if( id == R.id.action_downloads){
             startActivity(new Intent(MainActivity.this,DownloadsActivity.class));
             return true;
+        }else if(id == R.id.openyt){
+            boolean isInstalled = appInstalledOrNot("com.google.android.youtube");
+            if(isInstalled){
+                Log.d(TAG, "onOptionsItemSelected: YouTube is installed on this phone");
+                Intent launch = getPackageManager().getLaunchIntentForPackage("com.google.android.youtube");
+                startActivity(launch);
+            }else{
+                Log.d(TAG, "onOptionsItemSelected: YouTube is NOT installed on this phone");
+                final String appPackageName = "com.google.android.youtube"; // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -308,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                Toast.makeText(context,getResources().getString(R.string.download_complete),Toast.LENGTH_LONG).show();
                etURL.setText("");
                textLayout.setError("");
-               sendNotification("Download Complete!","VideoDownloader");
+               Toast.makeText(context,getString(R.string.download_complete), Toast.LENGTH_LONG).show();
            }else{
                Toast.makeText(context,getResources().getString(R.string.download_failed),Toast.LENGTH_LONG).show();
               try{

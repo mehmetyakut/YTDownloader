@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity"
     android:background="@color/accent">
 
@@ -58,9 +59,19 @@
         android:text="@string/notice"
         android:textColor="@color/icons"
         android:gravity="center"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/textView"
+        android:layout_above="@+id/adView"
         android:layout_alignLeft="@+id/linearLayout"
         android:layout_alignStart="@+id/linearLayout" />
 
-
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-8400135381508466/3217021140"
+        >
+    </com.google.android.gms.ads.AdView>
 </RelativeLayout>

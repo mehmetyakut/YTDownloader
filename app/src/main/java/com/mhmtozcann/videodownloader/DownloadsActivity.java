@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,22 +25,42 @@ import com.google.android.gms.analytics.Tracker;
 
 import java.io.File;
 import java.util.ArrayList;
-
+import com.google.android.gms.ads.*;
 
 /**
  * Created by razor on 1.05.2016.
  */
 public class DownloadsActivity extends AppCompatActivity {
     private static final String TAG = "DownloadsActivity";
+    private InterstitialAd adView;
+    private static final String AdID = "ca-app-pub-8400135381508466/9263554748";
     public Context context;
     private Tracker mTracker;
     private ListView listView;
     private Toolbar toolbar;
     private TextView no_video,video_dir;
+    SharedPreferences prefs;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.downloads);
+
+        prefs = getSharedPreferences("prefs",Context.MODE_PRIVATE);
+        editor = prefs.edit();
+
+        boolean isAdShowed = prefs.getBoolean("ad",false);
+        if(!isAdShowed){
+            Log.d(TAG, "isAdShowed now : "+ true);
+            editor.putBoolean("ad",true);
+            showAd();
+        }else {
+            Log.d(TAG, "isAdShowed now : "+ false);
+            editor.putBoolean("ad",false);
+        }
+        editor.commit();
+
         context = DownloadsActivity.this;
         listView =(ListView) findViewById(R.id.list);
         toolbar = (Toolbar) findViewById(R.id.toolbar1);
@@ -54,6 +75,9 @@ public class DownloadsActivity extends AppCompatActivity {
         mTracker.setScreenName("DownloadsActivity");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
         Log.d(TAG, "onCreate: sended Tracker Info ");
+
+
+
 
         getSupportActionBar().setTitle( getResources().getString(R.string.downloads));
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -131,6 +155,29 @@ public class DownloadsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void showAd(){
+        adView = new InterstitialAd(this);
+        adView.setAdUnitId(AdID);
+
+        final AdRequest adRequest = new AdRequest.Builder().addTestDevice("DCE0AE10FB4584072F669804913626A3").build();
+        adView.loadAd(adRequest);
+
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+
+            }
+
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                Log.d(TAG, "onAdLoaded: ");
+                if(adView.isLoaded()) adView.show();
+            }
+        });
     }
 
     @Override
